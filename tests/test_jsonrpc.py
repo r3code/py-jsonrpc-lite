@@ -93,6 +93,68 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual(msg.error.message, 'TestError')
         self.assertEqual(msg.error.data, 'Error-data')
         
+    def testParseRequestObj(self):      
+        '''Checks if JSON-RPC 2.0 Request object parsed correct'''
+        testReqJson = '''
+        {
+            "jsonrpc": "2.0",
+            "method": "sum",
+            "params": {"param1": 1, "param2": 2}, 
+            "id": 521
+        }''' 
+        expected = JsonRpcParsed(JsonRpcParsedType.REQUEST, \
+            JsonRpcRequestObject(521, 'sum', { "param1": 1, "param2": 2 })
+        ) 
+        actual = JsonRpcParsed.Parse(testReqJson)
+        testutils.assertEqualObjects(expected, actual)
+        
+    def testParseNotificationObj(self):      
+        '''Checks if JSON-RPC 2.0 Notification object parsed correct'''
+        testReqJson = '''
+        {
+            "jsonrpc": "2.0",
+            "method": "alarmAdd",
+            "params": {"param1": 1, "param2": 2}
+        }''' 
+        expected = JsonRpcParsed(JsonRpcParsedType.NOTIFICATION, \
+            JsonRpcNotificationObject('alarmAdd', { "param1": 1, "param2": 2 })
+        ) 
+        actual = JsonRpcParsed.Parse(testReqJson)
+        testutils.assertEqualObjects(expected, actual)
+        
+    def testParseSuccessObj(self):      
+        '''Checks if JSON-RPC 2.0 Success object parsed correct'''
+        testReqJson = '''
+        {
+            "jsonrpc": "2.0",
+            "result": 3, 
+            "id": 521
+        }''' 
+        expected = JsonRpcParsed(JsonRpcParsedType.SUCCESS, \
+            JsonRpcSuccessObject(521, 3)
+        ) 
+        actual = JsonRpcParsed.Parse(testReqJson)
+        testutils.assertEqualObjects(expected, actual)
+        
+    def testParseErrorObj(self):      
+        '''Checks if JSON-RPC 2.0 Error object parsed correct'''
+        testReqJson = """
+        {
+            "jsonrpc": "2.0",
+            "error": {
+                "code": -32601,
+                "message": "Method Not Found",
+                "data": "No method called sum"  
+            }, 
+            "id": 521
+        }"""                          
+        rpcerror = JsonRpcError.MethodNotFound('No method called sum')
+        expected = JsonRpcParsed(JsonRpcParsedType.ERROR, \
+            JsonRpcErrorObject(521, rpcerror)
+        ) 
+        actual = JsonRpcParsed.Parse(testReqJson)
+        testutils.assertEqualObjects(expected, actual)
+        
         
 
 if __name__ == '__main__':
