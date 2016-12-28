@@ -23,7 +23,7 @@ def defaultJsonEncode(o):
 class JsonRpcMessage(object):
 
     @classmethod
-    def Request(cls, id, method, params):
+    def Request(cls, id, method, params = None):
         return JsonRpcRequest(id, method, params)
 
     @classmethod
@@ -122,19 +122,26 @@ class JsonRpcParsed(object):
         
         def SubValidateHeader(jsondict):        
             '''Parses header and validate values.
-            Returns True or raises JsonRpcException in case of error'''
+            Raises JsonRpcException in case of error'''
             if not 'jsonrpc' in jsondict:
                 raise JsonRpcException('Message have no "jsonrpc" field')
             if jsondict['jsonrpc'] <> '2.0':                                    
-                raise JsonRpcException('"jsonrpc" field value should be 2.0')
-            return True 
+                raise JsonRpcException('"jsonrpc" field value should be 2.0') 
         
-        def SubValidateMethod(jsondict):
+        def SubValidateMethod(jsondict): 
+            '''Checks if method field exists and has correct value'''
             if not SubHasMethod(jsondict):
                 raise JsonRpcException('No "method" field')
             if not SubIsMethodCorrect(jsondict):
-                raise JsonRpcException('Invalid "method" field value') 
-            return True             
+                raise JsonRpcException('Invalid "method" field value')  
+            
+        def SubValidateErrorObj(errdict):
+            '''Checks if Error object has JSON-RPC 2.0 required fields. '''
+            hasCode = 'code' in errdict
+            hasMessage = 'message' in errdict
+            if not (hasCode and hasMessage):
+                raise JsonRpcException('Invalid JSON-RPC 2.0 Error object structure')
+            return True                 
         
         def SubParseJsonRpcObject(jsondict):
             '''Check if jsondict is valid JSON-RPC 2.0 object.
@@ -149,7 +156,7 @@ class JsonRpcParsed(object):
                 try:
                     SubValidateMethod(jsondict)  
                     data = JsonRpcMessage.Notification(jsondict['method'], \
-                        jsondict['params'])
+                        jsondict.get('params', None))
                     return JsonRpcParsed(JsonRpcParsedType.NOTIFICATION, data)
                 except JsonRpcException as e:                    
                     raise JsonRpcParseError(JsonRpcError.InvalidRequest(str(e)))
@@ -157,7 +164,7 @@ class JsonRpcParsed(object):
             isRequest = SubIsMethodCorrect(jsondict)
             if isRequest:
                 data = JsonRpcMessage.Request(jsondict['id'], \
-                    jsondict['method'], jsondict['params'])
+                    jsondict['method'], jsondict.get('params', None))
                 return JsonRpcParsed(JsonRpcParsedType.REQUEST, data)     
             # no METHOD field so it may be: success, error message  
             
@@ -168,11 +175,15 @@ class JsonRpcParsed(object):
                 
             isErrorMsg = 'error' in jsondict
             if isErrorMsg:           
-                err = jsondict['error']                                     
-                errorobj = JsonRpcError(err['code'], err['message'], \
-                    err['data']) 
-                data = JsonRpcMessage.Error(jsondict['id'], errorobj)
-                return JsonRpcParsed(JsonRpcParsedType.ERROR, data) 
+                err = jsondict['error']   
+                try:
+                    SubValidateErrorObj(err)                                  
+                    errorobj = JsonRpcError(err['code'], err['message'], \
+                        err.get('data', None)) 
+                    data = JsonRpcMessage.Error(jsondict['id'], errorobj)
+                    return JsonRpcParsed(JsonRpcParsedType.ERROR, data) 
+                except JsonRpcException as e:                    
+                    raise JsonRpcParseError(JsonRpcError.InvalidParams(str(e)))
             # no result, no error - id only             
             raise JsonRpcParseError(
                 JsonRpcError.InvalidRequest('No reqired fields'))
