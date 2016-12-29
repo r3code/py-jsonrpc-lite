@@ -32,5 +32,4 @@ class TestObj(object):
       self.a = a
       self.b = b
 
-assertEqualObjects(TestObj(1,2), TestObj(1,2))
-'''
+assertEqualObjects(TestObj(1,2), TestObj(1,2))'''

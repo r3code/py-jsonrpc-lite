@@ -9,8 +9,6 @@ import unittest
 from pyjsonrpclite import *  
 
 import json
-from datetime import datetime
-from shutil import copyfile
 import testutils
 
 
@@ -135,7 +133,25 @@ class TestJsonRpc(unittest.TestCase):
         self.assertTrue(hasattr(msg, 'code'))
         self.assertTrue(hasattr(msg, 'message'))
         self.assertEqual(-32603, msg.code)
-        self.assertEqual('Internal Error', msg.message)
+        self.assertEqual('Internal Error', msg.message) 
+
+    def testCustomErrorCorrect1(self):
+        msg = JsonRpcError.Error(-32099, 'tes-msg', 'Error-data')
+        self.assertTrue(isinstance(msg, JsonRpcError))
+        self.assertTrue(hasattr(msg, 'code'))
+        self.assertTrue(hasattr(msg, 'message'))
+        self.assertTrue(hasattr(msg, 'data'))  
+        self.assertEqual(-32099, msg.code)
+        self.assertEqual('tes-msg', msg.message)
+        self.assertEqual('Error-data', msg.data)
+    
+    def testCustomErrorCorrect2(self):
+        msg = JsonRpcError.Error(-32099, 'tes-msg')
+        self.assertTrue(isinstance(msg, JsonRpcError))
+        self.assertTrue(hasattr(msg, 'code'))
+        self.assertTrue(hasattr(msg, 'message'))
+        self.assertEqual(-32099, msg.code)
+        self.assertEqual('tes-msg', msg.message)
 
     def testParseRequest(self):
         '''Checks if JSON-RPC 2.0 Request object parsed correct'''
