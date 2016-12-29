@@ -6,12 +6,12 @@ py-jsonrpc-lite
     :alt: Build Status
 
 .. image:: https://codecov.io/gh/r3code/py-jsonrpc-lite/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/r3code/py-jsonrpc-lite
+    :target: https://codecov.io/gh/r3code/py-jsonrpc-lite
     :alt: Coverage Status 
     
-#todo:     
 .. image:: https://www.codacy.com/project/badge/-------------
-    :target: https://www.codacy.com/app/r3code/py-jsonrpc-lite
+    :target: https://www.codacy.com/app/r3code/py-jsonrpc-lite  
+    :alt: Code Quality Status
 
 Inspired by https://www.npmjs.com/package/jsonrpc-lite
 

@@ -133,7 +133,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertTrue(hasattr(msg, 'code'))
         self.assertTrue(hasattr(msg, 'message'))
         self.assertEqual(-32603, msg.code)
-        self.assertEqual('Internal Error', msg.message) 
+        self.assertEqual('Internal Error', msg.message)
 
     def testCustomErrorCorrect1(self):
         msg = JsonRpcError.Error(-32099, 'tes-msg', 'Error-data')
