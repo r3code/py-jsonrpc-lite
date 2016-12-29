@@ -51,7 +51,7 @@ class TestJsonRpc(unittest.TestCase):
         actual = JsonRpcMessage.Error(1, JsonRpcError(-32001, 'Err MSG', [105, 106]))
         testutils.assertEqualObjects(expected, actual)
 
-    def testJsonRpcMessageAsJsonCorrect(self):    
+    def testJsonRpcMessageAsJsonCorrect(self):
         # request
         expected = '{\n"id": 1,\n"method": "login",\n"params": [\n"user",\n"password"\n]\n}'
         msg = JsonRpcMessage.Request(1, 'login', ['user', 'password'])
@@ -118,6 +118,24 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual(msg.error.code, -32000)
         self.assertEqual(msg.error.message, 'TestError')
         self.assertEqual(msg.error.data, 'Error-data')
+
+    def testInternalErrorCorrect1(self):
+        msg = JsonRpcError.InternalError('Error-data')
+        self.assertTrue(isinstance(msg, JsonRpcError))
+        self.assertTrue(hasattr(msg, 'code'))
+        self.assertTrue(hasattr(msg, 'message'))
+        self.assertTrue(hasattr(msg, 'data'))  
+        elf.assertEqual(-32603, msg.code)
+        elf.assertEqual('Internal Error', msg.message)
+        elf.assertEqual('Error-data', msg.data)
+
+    def testInternalErrorCorrect2(self):
+        msg = JsonRpcError.InternalError()
+        self.assertTrue(isinstance(msg, JsonRpcError))
+        self.assertTrue(hasattr(msg, 'code'))
+        self.assertTrue(hasattr(msg, 'message'))
+        elf.assertEqual(-32603, msg.code)
+        elf.assertEqual('Internal Error', msg.message)
 
     def testParseRequest(self):
         '''Checks if JSON-RPC 2.0 Request object parsed correct'''

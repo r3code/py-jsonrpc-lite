@@ -223,6 +223,7 @@ class JsonRpcParsed(object):
                         
         def SubParseJsonRpcObject(jsondict):
             '''Check if jsondict is valid JSON-RPC 2.0 object.
+            Raises `JsonRpcParseError` if parse/validation failed.
             Returns `JsonRpcParsed` object containing Parse results.'''
             try:
                 SubValidateHeader(jsondict)
@@ -271,8 +272,9 @@ class JsonRpcError(object):
     
     def __init__(self, code, message, data = None):
         self.code = code
-        self.message = message
-        self.data = data
+        self.message = message 
+        if not data is None:
+            self.data = data
 
     @classmethod
     def Error(cls, code, message, data = None): 
