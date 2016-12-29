@@ -238,11 +238,11 @@ class TestJsonRpc(unittest.TestCase):
         
     def testParseReturnsParseError(self):
         '''Parse found invalid json'''
-        '''testReqJson = """{INVALID_JSON}"""
-        rpcerror = JsonRpcErrorResponse(None,JsonRpcError.ParseError('{INVALID_JSON}'))
-        expected = JsonRpcParsed(JsonRpcParsedType.INVALID, rpcerror)
-        actual = JsonRpcParsed.Parse(testReqJson)
-        testutils.assertEqualObjects(expected, actual)'''
+        testReqJson = """{INVALID_JSON}"""
+        with self.assertRaises(JsonRpcParseError) as context: 
+            JsonRpcParsed.Parse(testReqJson)
+        expectedErr = JsonRpcError.ParseError('{INVALID_JSON}')
+        testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
         
     def testParseInvalidHeader1(self):
         '''Parse found JSON-PRC message without jsonrpc field'''
