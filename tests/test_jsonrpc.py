@@ -51,10 +51,28 @@ class TestJsonRpc(unittest.TestCase):
         actual = JsonRpcMessage.Error(1, JsonRpcError(-32001, 'Err MSG', [105, 106]))
         testutils.assertEqualObjects(expected, actual)
 
-    def testJsonRpcMessageAsJsonCorrect(self):
+    def testJsonRpcMessageAsJsonCorrect(self):    
+        # request
         expected = '{\n"id": 1,\n"method": "login",\n"params": [\n"user",\n"password"\n]\n}'
-
         msg = JsonRpcMessage.Request(1, 'login', ['user', 'password'])
+        actual = JsonRpcMessage.AsJson(msg, indent=False, escape=True)
+        self.assertEqual(expected, actual)
+        
+        # request, no params
+        expected = '{\n"id": 1,\n"method": "login"\n}'
+        msg = JsonRpcMessage.Request(1, 'login')
+        actual = JsonRpcMessage.AsJson(msg, indent=False, escape=True)
+        self.assertEqual(expected, actual)
+        
+        # notify
+        expected = '{\n"method": "alarm",\n"params": [\n"a",\n"b"\n]\n}'
+        msg = JsonRpcMessage.Notification('alarm', ['a', 'b'])
+        actual = JsonRpcMessage.AsJson(msg, indent=False, escape=True)
+        self.assertEqual(expected, actual)
+        
+        # notify, no params
+        expected = '{\n"method": "alarm"\n}'
+        msg = JsonRpcMessage.Notification('alarm')
         actual = JsonRpcMessage.AsJson(msg, indent=False, escape=True)
         self.assertEqual(expected, actual)
 
@@ -73,10 +91,9 @@ class TestJsonRpc(unittest.TestCase):
         '''Checks object inheritance, structure, init'''
         msg = JsonRpcNotification('ntfName', 'params')
         self.assertTrue(isinstance(msg, JsonRpcRequest))
-        self.assertTrue(hasattr(msg, 'id'))
+        self.assertFalse(hasattr(msg, 'id'))
         self.assertTrue(hasattr(msg, 'method'))
         self.assertTrue(hasattr(msg, 'params'))
-        self.assertEqual(None, msg.id)
         self.assertEqual('ntfName', msg.method)
         self.assertEqual('params', msg.params)
 

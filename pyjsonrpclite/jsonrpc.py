@@ -48,14 +48,16 @@ class JsonRpcRequest(JsonRpcMessage):
     '''JSON-RPC 2.0 Request object'''
     def __init__(self, id, method, params = None): 
         self.id = id
-        self.method = method
-        self.params = params
+        self.method = method 
+        if not params is None:
+            self.params = params
 
 
 class JsonRpcNotification(JsonRpcRequest):
     '''JSON-RPC 2.0 Notification object'''
     def __init__(self, method, params = None):
         JsonRpcRequest.__init__(self, None, method, params)
+        del self.id
         
 
 class JsonRpcSuccessResponse(JsonRpcMessage):
