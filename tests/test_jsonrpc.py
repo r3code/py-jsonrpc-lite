@@ -177,7 +177,7 @@ class TestJsonRpc(unittest.TestCase):
         )
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
-        
+
     def testParseSuccessRes(self):
         '''Checks if JSON-RPC 2.0 Success object parsed correct'''
         testReqJson = '''
