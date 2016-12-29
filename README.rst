@@ -1,10 +1,11 @@
 py-jsonrpc-lite
 ===============
-#todo: 
-.. image:: https://travis-ci.org/r3code/py-jsonrpc-lite.png?branch=master
-    :target: https://travis-ci.org/r3code/py-jsonrpc-lite?branch=master
+
+.. image:: https://travis-ci.org/r3code/py-jsonrpc-lite.svg?branch=master
+    :target: https://travis-ci.org/r3code/py-jsonrpc-lite
     :alt: Build Status
-#todo: 
+
+#todo:
 .. image:: https://coveralls.io/repos/r3code/py-jsonrpc-lite/badge.png?branch=master
     :target: https://coveralls.io/r/r3code/py-jsonrpc-lite?branch=master
     :alt: Coverage Status
