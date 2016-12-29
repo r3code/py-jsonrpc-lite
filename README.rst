@@ -28,7 +28,7 @@ Install
 Tests
 -----
 
-#todo
+python -m unittest discover -s "tests" -p "test*.py"
 
 Features
 --------
