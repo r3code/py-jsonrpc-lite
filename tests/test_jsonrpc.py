@@ -116,6 +116,18 @@ class TestJsonRpc(unittest.TestCase):
         )
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
+
+    def testParseRequestInvalidRaisesException(self):
+        '''Parse json with "id" only raises JsonRpcParseError'''
+        testReqJson = '''
+        {
+            "jsonrpc": "2.0", 
+            "id": 521
+        }'''
+        with self.assertRaises(JsonRpcParseError) as context: 
+            JsonRpcParsed.Parse(testReqJson)
+        expectedErr = JsonRpcError.InvalidRequest('No reqired fields')
+        testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
         
     def testParseNotificationReq(self):
         '''Checks if JSON-RPC 2.0 Notification object parsed correct'''

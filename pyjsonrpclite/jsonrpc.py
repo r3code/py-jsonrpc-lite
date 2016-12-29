@@ -262,7 +262,12 @@ class JsonRpcParsed(object):
         return parsedObjInfo
 
 class JsonRpcError(object):
-    '''Class implements JSON-RPC 2.0 Error Object'''
+    '''Class implements JSON-RPC 2.0 Error Object.     
+    Params:
+        code -- negative int number JSON-RPC 2.0 error code,
+        message -- string, error message,
+        data -- any type, extra info (may be ommited)
+    '''
     
     def __init__(self, code, message, data = None):
         self.code = code
@@ -270,37 +275,48 @@ class JsonRpcError(object):
         self.data = data
 
     @classmethod
-    def Error(cls, code, message, data = None):
+    def Error(cls, code, message, data = None): 
+        '''Creates common Error object.'''
         return JsonRpcError(code, message, data)
 
     @classmethod
     def ParseError(cls, data = None):
+        '''Creates JsonRpcError instance for prdefined JSON-RPC 2.0 error. 
+        Code -32700. Invalid JSON was received by the server.
+        An error occurred on the server while parsing the JSON text.
+        '''
         code = -32700
         message = 'Parse Error'
         return JsonRpcError(code, message, data)
 
     @classmethod
     def InvalidRequest(cls, data = None):
+        '''Creates JsonRpcError instance for prdefined JSON-RPC 2.0 error. 
+        Code -32600. The JSON sent is not a valid Request object.'''
         code = -32600
         message = 'Invalid Request'
         return JsonRpcError(code, message, data)
 
     @classmethod
     def MethodNotFound(cls, data = None):
+        '''Creates JsonRpcError instance for prdefined JSON-RPC 2.0 error. 
+        Code -32601. The method does not exist / is not available.'''
         code = -32601
         message = 'Method Not Found'
         return JsonRpcError(code, message, data)
 
     @classmethod
-    def InvalidParams(cls, data = None):
+    def InvalidParams(cls, data = None): 
+        '''Creates JsonRpcError instance for prdefined JSON-RPC 2.0 error. 
+        Code -32602. Invalid method parameter(s).'''
         code = -32602
         message = 'Invalid Params'
         return JsonRpcError(code, message, data)
 
     @classmethod
-    def InternalError(cls, data = None):   
+    def InternalError(cls, data = None):  
+        '''Creates JsonRpcError instance for prdefined JSON-RPC 2.0 error. 
+        Code -32603. Internal JSON-RPC error.''' 
         code = -32603
         message = 'Internal Error'
         return JsonRpcError(code, message, data)
-        
-#TODO: Batch request/response object ??
