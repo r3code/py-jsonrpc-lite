@@ -5,8 +5,8 @@ import json
 class JsonRpcException(Exception):
     """Base class for exceptions in this module."""
     pass
-       
-    
+
+
 class JsonRpcParseError(Exception):
     """Raised if Parse JSON-RPC 2.0 string failed.
     Params:
@@ -14,12 +14,12 @@ class JsonRpcParseError(Exception):
     def __init__(self, rpcError):
         Exception.__init__(self, rpcError)         
         self.rpcError = rpcError         
-                  
-        
+
+
 def defaultJsonEncode(o):
     return o.__dict__ 
-            
-    
+
+
 class JsonRpcMessage(object):
 
     @classmethod
@@ -33,7 +33,7 @@ class JsonRpcMessage(object):
     @classmethod
     def Success(cls, id, result):
         return JsonRpcSuccessResponse(id, result)
-    
+
     @classmethod
     def Error(cls, id, errorobj):
         return JsonRpcErrorResponse(id, errorobj)
@@ -104,14 +104,14 @@ class JsonRpcParsed(object):
         
         def SubHasId(jsondict):
             return 'id' in jsondict       
-            
+
         def SubHasValidId(jsondict):
             '''Checks if Id message field present and has valid value'''
-            
+
             isIdValid = SubHasId(jsondict) and (not jsondict['id'] is None) \
                 and (jsondict['id'] <> '') 
             return isIdValid   
-            
+
         def SubHasMethod(jsondict):
             return 'method' in jsondict 
 
@@ -121,7 +121,7 @@ class JsonRpcParsed(object):
             methodValid = SubHasMethod(jsondict) and (not jsondict['method'] is None) \
                 and len(jsondict['method']) > 0
             return methodValid  
-        
+
         def SubValidateHeader(jsondict):        
             '''Parses header and validate values.
             Raises `JsonRpcException` in case of error'''
@@ -129,14 +129,14 @@ class JsonRpcParsed(object):
                 raise JsonRpcException('Message have no "jsonrpc" field')
             if jsondict['jsonrpc'] <> '2.0':                                    
                 raise JsonRpcException('"jsonrpc" field value should be 2.0') 
-        
+
         def SubValidateMethod(jsondict): 
             '''Checks if method field exists and has correct value'''
             if not SubHasMethod(jsondict):
                 raise JsonRpcException('No "method" field')
             if not SubIsMethodCorrect(jsondict):
                 raise JsonRpcException('Invalid "method" field value')                         
-            
+
         def SubValidateErrorObj(errdict):
             '''Checks if Error object has JSON-RPC 2.0 required fields. '''
             hasCode = 'code' in errdict
@@ -148,7 +148,7 @@ class JsonRpcParsed(object):
             allowedCodes = allowedCodes + [x for x in range(-32099,-31999)]    
             if not errdict['code'] in allowedCodes:
                 raise JsonRpcException('Invalid JSON-RPC 2.0 Error code')    
-            
+
         def SubParseNotification(jsondict): 
             '''Parses jsondict, validates JSON-RPC 2.0 Notification structure and values.
             Doesn't check JSON-RPC 2.0 "jsonrpc" and "id".
@@ -160,7 +160,7 @@ class JsonRpcParsed(object):
             params = jsondict.get('params', None)
             payload = JsonRpcMessage.Notification(jsondict['method'], params)
             return JsonRpcParsed(JsonRpcParsedType.NOTIFICATION, payload)                   
-        
+
         def SubParseRequest(jsondict):
             '''Parses jsondict, validates JSON-RPC 2.0 Request structure and values.
             Doesn't check JSON-RPC 2.0 "jsonrpc","id", "method".
@@ -170,8 +170,7 @@ class JsonRpcParsed(object):
             params = jsondict.get('params', None)             
             payload = JsonRpcMessage.Request(id, method, params)
             return JsonRpcParsed(JsonRpcParsedType.REQUEST, payload)
-            
-        
+
         def SubParseSuccessResponse(jsondict):
             '''Parses jsondict, validates JSON-RPC 2.0 Response Success structure and values.
             Doesn't check JSON-RPC 2.0 "jsonrpc","id".
@@ -181,7 +180,7 @@ class JsonRpcParsed(object):
             '''
             payload = JsonRpcMessage.Success(jsondict['id'], jsondict['result'])
             return JsonRpcParsed(JsonRpcParsedType.SUCCESS, payload)  
-            
+
         def SubParseErrorResponse(jsondict):
             '''Parses jsondict, validates JSON-RPC 2.0 Response Error structure and values.
             Doesn't check JSON-RPC 2.0 "jsonrpc","id".
@@ -198,7 +197,7 @@ class JsonRpcParsed(object):
                 return JsonRpcParsed(JsonRpcParsedType.ERROR, payload) 
             except JsonRpcException as e:
                 raise JsonRpcParseError(JsonRpcError.InvalidParams(str(e)))
-                        
+
         def SubParseJsonRpcObject(jsondict):
             '''Check if jsondict is valid JSON-RPC 2.0 object.
             Raises `JsonRpcParseError` if parse/validation failed.
@@ -207,21 +206,21 @@ class JsonRpcParsed(object):
                 SubValidateHeader(jsondict)
             except JsonRpcException as e:
                 raise JsonRpcParseError(JsonRpcError.InvalidRequest(str(e)))
-                           
+
             isNotification = not SubHasValidId(jsondict)
             if isNotification:  
                 return SubParseNotification(jsondict)
-               
+
             #else it has Id so it may be: request, success, error message
             isRequest = SubIsMethodCorrect(jsondict)
             if isRequest: 
                 return SubParseRequest(jsondict)
-                                 
+
             # no METHOD field so it may be: success, error message
-            isSuccessMsg = 'result' in jsondict  
-            if isSuccessMsg:    
+            isSuccessMsg = 'result' in jsondict
+            if isSuccessMsg:
                 return SubParseSuccessResponse(jsondict)
-                
+
             isErrorMsg = 'error' in jsondict
             if isErrorMsg:
                 return SubParseErrorResponse(jsondict)
@@ -241,13 +240,13 @@ class JsonRpcParsed(object):
         return parsedObjInfo
 
 class JsonRpcError(object):
-    '''Class implements JSON-RPC 2.0 Error Object.     
+    '''Class implements JSON-RPC 2.0 Error Object.
     Params:
         code -- negative int number JSON-RPC 2.0 error code,
         message -- string, error message,
         data -- any type, extra info (may be ommited)
     '''
-    
+
     def __init__(self, code, message, data = None):
         self.code = code
         self.message = message 

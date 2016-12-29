@@ -1,2 +1,2 @@
-from jsonrpc import *  
+from jsonrpc import *
 #__all__ = ['jsonrpc']

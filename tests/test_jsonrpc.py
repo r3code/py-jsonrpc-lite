@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.abspath('..\..'))
 
 import unittest
 
-from pyjsonrpclite import *  
+from pyjsonrpclite import *
 
 import json
 import testutils
@@ -55,7 +55,7 @@ class TestJsonRpc(unittest.TestCase):
         msg = JsonRpcMessage.Request(1, 'login', ['user', 'password'])
         actual = JsonRpcMessage.AsJson(msg, indent=False, escape=True)
         self.assertEqual(expected, actual)
-        
+
         # request, no params
         expected = '{\n"id": 1,\n"method": "login"\n}'
         msg = JsonRpcMessage.Request(1, 'login')
