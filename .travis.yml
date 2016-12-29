@@ -1,0 +1,14 @@
+# https://travis-ci.org/r3code/py-jsonrpc-lite
+language: python
+sudo: false
+python:
+  - "2.7" 
+# command to run tests
+script: python -m unittest discover -s "tests" -p "test*.py"
+
+install:
+  - pip install coverage codecov
+
+after_success:
+  - coverage combine
+  - codecov
