@@ -4,7 +4,10 @@ sudo: false
 python:
   - "2.7" 
 # command to run tests
-script: python -m unittest discover -s "tests" -p "test*.py"
+script: 
+  - python -m unittest discover -s "tests" -p "test*.py"
+  - coverage run --source=pyjsonrpclite -m unittest discover -s tests/
+  - coverage report -m
 
 install:
   - pip install coverage codecov
