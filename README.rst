@@ -9,7 +9,7 @@ py-jsonrpc-lite
     :target: https://codecov.io/gh/r3code/py-jsonrpc-lite
     :alt: Coverage Status 
     
-.. image:: https://www.codacy.com/project/badge/-------------
+.. image:: https://api.codacy.com/project/badge/Grade/acf5dba2b46242a1a85d171f884f3993
     :target: https://www.codacy.com/app/r3code/py-jsonrpc-lite  
     :alt: Code Quality Status
 
