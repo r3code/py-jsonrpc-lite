@@ -125,17 +125,17 @@ class TestJsonRpc(unittest.TestCase):
         self.assertTrue(hasattr(msg, 'code'))
         self.assertTrue(hasattr(msg, 'message'))
         self.assertTrue(hasattr(msg, 'data'))  
-        elf.assertEqual(-32603, msg.code)
-        elf.assertEqual('Internal Error', msg.message)
-        elf.assertEqual('Error-data', msg.data)
+        self.assertEqual(-32603, msg.code)
+        self.assertEqual('Internal Error', msg.message)
+        self.assertEqual('Error-data', msg.data)
 
     def testInternalErrorCorrect2(self):
         msg = JsonRpcError.InternalError()
         self.assertTrue(isinstance(msg, JsonRpcError))
         self.assertTrue(hasattr(msg, 'code'))
         self.assertTrue(hasattr(msg, 'message'))
-        elf.assertEqual(-32603, msg.code)
-        elf.assertEqual('Internal Error', msg.message)
+        self.assertEqual(-32603, msg.code)
+        self.assertEqual('Internal Error', msg.message)
 
     def testParseRequest(self):
         '''Checks if JSON-RPC 2.0 Request object parsed correct'''
