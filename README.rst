@@ -1,10 +1,6 @@
 ﻿py-jsonrpc-lite
 ===============
 
-.. image:: https://api.codacy.com/project/badge/Grade/acf5dba2b46242a1a85d171f884f3993
-   :alt: Codacy Badge
-   :target: https://www.codacy.com/app/contact_57/py-jsonrpc-lite?utm_source=github.com&utm_medium=referral&utm_content=r3code/py-jsonrpc-lite&utm_campaign=badger
-
 .. image:: https://travis-ci.org/r3code/py-jsonrpc-lite.svg?branch=master
     :target: https://travis-ci.org/r3code/py-jsonrpc-lite
     :alt: Build Status
