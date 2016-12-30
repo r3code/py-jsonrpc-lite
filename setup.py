@@ -15,8 +15,7 @@ setup(
     name="py-jsonrpc-lite",
     version=version,
     packages=find_packages(),
-    test_suite="nose.collector",
-    tests_require=["nose", "mock"],
+    test_suite="unittest",
 
     # metadata for upload to PyPI
     author="Dmitriy S. Sinyavskiy",
