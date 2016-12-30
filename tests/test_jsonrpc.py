@@ -1,15 +1,17 @@
 ﻿#!/usr/bin/python
 # -*- coding: utf-8 -*-
-import os,sys
+import os
+import sys
+import unittest
+import testutils
+
+from pyjsonrpclite import JsonRpcMessage, JsonRpcRequest, JsonRpcNotification,\
+    JsonRpcSuccessResponse, JsonRpcErrorResponse,\
+    JsonRpcError, JsonRpcParsedType, JsonRpcParsed,\
+    JsonRpcParseError
+
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('..\..'))
-
-import unittest
-
-from pyjsonrpclite import *
-
-import json
-import testutils
 
 
 class TestJsonRpc(unittest.TestCase):
@@ -30,8 +32,8 @@ class TestJsonRpc(unittest.TestCase):
         testutils.assertEqualObjects(expected, actual)
 
     def testJsonRpcMessageNotificationCorrect(self):
-        expected = JsonRpcNotification('alarm', ['a','b'])
-        actual = JsonRpcMessage.Notification('alarm', ['a','b'])
+        expected = JsonRpcNotification('alarm', ['a', 'b'])
+        actual = JsonRpcMessage.Notification('alarm', ['a', 'b'])
         testutils.assertEqualObjects(expected, actual)
 
     def testJsonRpcMessageNotificationNoParamsCorrect(self):
@@ -53,7 +55,8 @@ class TestJsonRpc(unittest.TestCase):
 
     def testJsonRpcMessageAsJsonCorrect(self):
         # request
-        expected = '{\n"id": 1,\n"method": "login",\n"params": [\n"user",\n"password"\n]\n}'
+        expected = '{\n"id": 1,\n"method": "login",' +\
+            '\n"params": [\n"user",\n"password"\n]\n}'
         msg = JsonRpcMessage.Request(1, 'login', ['user', 'password'])
         actual = JsonRpcMessage.AsJson(msg, indent=False, escape=True)
         self.assertEqual(expected, actual)
@@ -108,8 +111,8 @@ class TestJsonRpc(unittest.TestCase):
 
     def testJsonRpcErrorResponseCorrect(self):
         '''Checks object inheritance, structure, init'''
-        msg = JsonRpcErrorResponse(1, JsonRpcError(-32000, 'TestError', \
-            'Error-data'))
+        msg = JsonRpcErrorResponse(
+            1, JsonRpcError(-32000, 'TestError', 'Error-data'))
         self.assertTrue(isinstance(msg, JsonRpcMessage))
         self.assertTrue(hasattr(msg, 'id'))
         self.assertTrue(hasattr(msg, 'error'))
@@ -124,7 +127,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertTrue(isinstance(msg, JsonRpcError))
         self.assertTrue(hasattr(msg, 'code'))
         self.assertTrue(hasattr(msg, 'message'))
-        self.assertTrue(hasattr(msg, 'data'))  
+        self.assertTrue(hasattr(msg, 'data'))
         self.assertEqual(-32603, msg.code)
         self.assertEqual('Internal Error', msg.message)
         self.assertEqual('Error-data', msg.data)
@@ -142,7 +145,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertTrue(isinstance(msg, JsonRpcError))
         self.assertTrue(hasattr(msg, 'code'))
         self.assertTrue(hasattr(msg, 'message'))
-        self.assertTrue(hasattr(msg, 'data'))  
+        self.assertTrue(hasattr(msg, 'data'))
         self.assertEqual(-32099, msg.code)
         self.assertEqual('tes-msg', msg.message)
         self.assertEqual('Error-data', msg.data)
@@ -161,11 +164,12 @@ class TestJsonRpc(unittest.TestCase):
         {
             "jsonrpc": "2.0",
             "method": "sum",
-            "params": {"param1": 1, "param2": 2}, 
+            "params": {"param1": 1, "param2": 2},
             "id": 521
         }'''
-        expected = JsonRpcParsed(JsonRpcParsedType.REQUEST, \
-            JsonRpcRequest(521, 'sum', { "param1": 1, "param2": 2 })
+        expected = JsonRpcParsed(
+            JsonRpcParsedType.REQUEST,
+            JsonRpcRequest(521, 'sum', {"param1": 1, "param2": 2})
         )
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
@@ -174,7 +178,7 @@ class TestJsonRpc(unittest.TestCase):
         '''Parse json with "id" only raises JsonRpcParseError'''
         testReqJson = '''
         {
-            "jsonrpc": "2.0", 
+            "jsonrpc": "2.0",
             "id": 521
         }'''
         with self.assertRaises(JsonRpcParseError) as context:
@@ -190,8 +194,9 @@ class TestJsonRpc(unittest.TestCase):
             "method": "alarmAdd",
             "params": {"param1": 1, "param2": 2}
         }'''
-        expected = JsonRpcParsed(JsonRpcParsedType.NOTIFICATION, \
-            JsonRpcNotification('alarmAdd', { "param1": 1, "param2": 2 })
+        expected = JsonRpcParsed(
+            JsonRpcParsedType.NOTIFICATION,
+            JsonRpcNotification('alarmAdd', {"param1": 1, "param2": 2})
         )
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
@@ -201,10 +206,11 @@ class TestJsonRpc(unittest.TestCase):
         testReqJson = '''
         {
             "jsonrpc": "2.0",
-            "result": 3, 
+            "result": 3,
             "id": 521
         }'''
-        expected = JsonRpcParsed(JsonRpcParsedType.SUCCESS, \
+        expected = JsonRpcParsed(
+            JsonRpcParsedType.SUCCESS,
             JsonRpcSuccessResponse(521, 3)
         )
         actual = JsonRpcParsed.Parse(testReqJson)
@@ -219,13 +225,14 @@ class TestJsonRpc(unittest.TestCase):
                 "code": -32601,
                 "message": "Method Not Found",
                 "data": "No method called [sum]"
-            }, 
+            },
             "id": 521
         }'''
         rpcerror = JsonRpcError.MethodNotFound('No method called [sum]')
-        expected = JsonRpcParsed(JsonRpcParsedType.ERROR, \
+        expected = JsonRpcParsed(
+            JsonRpcParsedType.ERROR,
             JsonRpcErrorResponse(521, rpcerror)
-        )
+            )
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
 
@@ -240,7 +247,7 @@ class TestJsonRpc(unittest.TestCase):
                 "code": ''' + str(code) + ''',
                 "message": "Method Not Found",
                 "data": "No method called [sum]"
-            }, 
+            },
             "id": 521
         }'''
         testReqJson = SubGetErrornousErrObj(-32800)
@@ -267,7 +274,8 @@ class TestJsonRpc(unittest.TestCase):
         testReqJson = SubGetErrornousErrObj(-32100)
         with self.assertRaises(JsonRpcParseError) as context:
             JsonRpcParsed.Parse(testReqJson)
-        expectedErr = JsonRpcError.InvalidParams('Invalid JSON-RPC 2.0 Error code')
+        expectedErr = JsonRpcError.InvalidParams(
+            'Invalid JSON-RPC 2.0 Error code')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
         testReqJson = SubGetErrornousErrObj(-31199)
@@ -294,11 +302,11 @@ class TestJsonRpc(unittest.TestCase):
                 "code": -32601,
                 "message": "Method Not Found",
                 "data": "No method called [sum]"
-            }, 
+            },
             "id": 521
         }'''
         with self.assertRaises(JsonRpcParseError)as context:
-            JsonRpcParsed.Parse(testReqJson)   
+            JsonRpcParsed.Parse(testReqJson)
         expectedErr = JsonRpcError.InvalidRequest(
             'Message have no "jsonrpc" field')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
@@ -312,11 +320,11 @@ class TestJsonRpc(unittest.TestCase):
                 "code": -32601,
                 "message": "Method Not Found",
                 "data": "No method called [sum]"
-            }, 
+            },
             "id": 521
         }'''
         with self.assertRaises(JsonRpcParseError)as context:
-            JsonRpcParsed.Parse(testReqJson)   
+            JsonRpcParsed.Parse(testReqJson)
         expectedErr = JsonRpcError.InvalidRequest(
             '"jsonrpc" field value should be 2.0')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
@@ -328,7 +336,7 @@ class TestJsonRpc(unittest.TestCase):
             "jsonrpc": "2.0"
         }'''
         with self.assertRaises(JsonRpcParseError)as context:
-            JsonRpcParsed.Parse(testReqJson)   
+            JsonRpcParsed.Parse(testReqJson)
         expectedErr = JsonRpcError.InvalidRequest('No "method" field')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
@@ -340,7 +348,7 @@ class TestJsonRpc(unittest.TestCase):
             "method": null
         }'''
         with self.assertRaises(JsonRpcParseError)as context:
-            JsonRpcParsed.Parse(testReqJson)   
+            JsonRpcParsed.Parse(testReqJson)
         expectedErr = JsonRpcError.InvalidRequest(
             'Invalid "method" field value')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)

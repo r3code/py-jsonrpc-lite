@@ -24,7 +24,7 @@ def assertEqualObjects(expected, actual):
     Assests if objects are equal by content when presented as JSON.
     Converts each object to JSON string and compares them.
 
-    Example of code: 
+    Example of code:
     class TestObj(object):
        def __init__(self, a, b):
           self.a = a
@@ -36,4 +36,3 @@ def assertEqualObjects(expected, actual):
     actJson = ObjAsJson(actual)
     t = unittest.TestCase('__init__')
     t.assertEqual(expJson, actJson)
-
