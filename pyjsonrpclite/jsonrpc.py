@@ -3,6 +3,9 @@
 import json
 
 
+version = '0.1'
+
+
 class JsonRpcException(Exception):
     """Base class for exceptions in this module."""
     pass
