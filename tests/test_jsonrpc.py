@@ -21,31 +21,38 @@ class TestJsonRpc(unittest.TestCase):
     def tearDown(self):
         pass
 
+
+    # pylint: disable=R0201
     def testJsonRpcMessageRequestCorrect(self):
         expected = JsonRpcRequest(1, 'login', ['user', 'password'])
         actual = JsonRpcMessage.Request(1, 'login', ['user', 'password'])
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testJsonRpcMessageRequestNoParamsCorrect(self):
         expected = JsonRpcRequest(1, 'login')
         actual = JsonRpcMessage.Request(1, 'login')
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testJsonRpcMessageNotificationCorrect(self):
         expected = JsonRpcNotification('alarm', ['a', 'b'])
         actual = JsonRpcMessage.Notification('alarm', ['a', 'b'])
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testJsonRpcMessageNotificationNoParamsCorrect(self):
         expected = JsonRpcNotification('alarm')
         actual = JsonRpcMessage.Notification('alarm')
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testJsonRpcMessageSuccessCorrect(self):
         expected = JsonRpcSuccessResponse(1, 1107)
         actual = JsonRpcMessage.Success(1, 1107)
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testJsonRpcMessageErrorCorrect(self):
         expected = JsonRpcErrorResponse(
             1, JsonRpcError(-32001, 'Err MSG', [105, 106]))
@@ -53,6 +60,7 @@ class TestJsonRpc(unittest.TestCase):
             1, JsonRpcError(-32001, 'Err MSG', [105, 106]))
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testJsonRpcMessageAsJsonCorrect(self):
         # request
         expected = '{\n"id": 1,\n"method": "login",' +\
@@ -79,6 +87,7 @@ class TestJsonRpc(unittest.TestCase):
         actual = JsonRpcMessage.AsJson(msg, indent=False, escape=True)
         self.assertEqual(expected, actual)
 
+    # pylint: disable=R0201
     def testJsonRpcRequestCorrect(self):
         '''Checks object inheritance, structure, init'''
         msg = JsonRpcRequest(1, 'methodName', 'params')
@@ -90,6 +99,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual('methodName', msg.method)
         self.assertEqual('params', msg.params)
 
+    # pylint: disable=R0201
     def testJsonRpcNotificationCorrect(self):
         '''Checks object inheritance, structure, init'''
         msg = JsonRpcNotification('ntfName', 'params')
@@ -100,6 +110,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual('ntfName', msg.method)
         self.assertEqual('params', msg.params)
 
+    # pylint: disable=R0201
     def testJsonRpcSuccessResponseCorrect(self):
         '''Checks object inheritance, structure, init'''
         msg = JsonRpcSuccessResponse(1, 'result-value')
@@ -109,6 +120,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual(1, msg.id)
         self.assertEqual('result-value', msg.result)
 
+    # pylint: disable=R0201
     def testJsonRpcErrorResponseCorrect(self):
         '''Checks object inheritance, structure, init'''
         msg = JsonRpcErrorResponse(
@@ -122,6 +134,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual(msg.error.message, 'TestError')
         self.assertEqual(msg.error.data, 'Error-data')
 
+    # pylint: disable=R0201
     def testInternalErrorCorrect1(self):
         msg = JsonRpcError.InternalError('Error-data')
         self.assertTrue(isinstance(msg, JsonRpcError))
@@ -132,6 +145,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual('Internal Error', msg.message)
         self.assertEqual('Error-data', msg.data)
 
+    # pylint: disable=R0201
     def testInternalErrorCorrect2(self):
         msg = JsonRpcError.InternalError()
         self.assertTrue(isinstance(msg, JsonRpcError))
@@ -140,6 +154,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual(-32603, msg.code)
         self.assertEqual('Internal Error', msg.message)
 
+    # pylint: disable=R0201
     def testCustomErrorCorrect1(self):
         msg = JsonRpcError.Error(-32099, 'tes-msg', 'Error-data')
         self.assertTrue(isinstance(msg, JsonRpcError))
@@ -150,6 +165,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual('tes-msg', msg.message)
         self.assertEqual('Error-data', msg.data)
 
+    # pylint: disable=R0201
     def testCustomErrorCorrect2(self):
         msg = JsonRpcError.Error(-32099, 'tes-msg')
         self.assertTrue(isinstance(msg, JsonRpcError))
@@ -158,6 +174,7 @@ class TestJsonRpc(unittest.TestCase):
         self.assertEqual(-32099, msg.code)
         self.assertEqual('tes-msg', msg.message)
 
+    # pylint: disable=R0201
     def testParseRequest(self):
         '''Checks if JSON-RPC 2.0 Request object parsed correct'''
         testReqJson = '''
@@ -174,6 +191,7 @@ class TestJsonRpc(unittest.TestCase):
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testParseRequestInvalidRaisesException(self):
         '''Parse json with "id" only raises JsonRpcParseError'''
         testReqJson = '''
@@ -186,6 +204,7 @@ class TestJsonRpc(unittest.TestCase):
         expectedErr = JsonRpcError.InvalidRequest('No reqired fields')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseNotificationReq(self):
         '''Checks if JSON-RPC 2.0 Notification object parsed correct'''
         testReqJson = '''
@@ -201,6 +220,7 @@ class TestJsonRpc(unittest.TestCase):
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testParseSuccessRes(self):
         '''Checks if JSON-RPC 2.0 Success object parsed correct'''
         testReqJson = '''
@@ -216,6 +236,7 @@ class TestJsonRpc(unittest.TestCase):
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testParseErrorObj1(self):
         '''Checks if JSON-RPC 2.0 Error object parsed correct'''
         testReqJson = '''
@@ -236,6 +257,7 @@ class TestJsonRpc(unittest.TestCase):
         actual = JsonRpcParsed.Parse(testReqJson)
         testutils.assertEqualObjects(expected, actual)
 
+    # pylint: disable=R0201
     def testParseErrorObjInvalidCode1(self):
         '''Parse JSON-RPC 2.0 Error object with invalid code raises
         exception.'''
@@ -285,6 +307,7 @@ class TestJsonRpc(unittest.TestCase):
             'Invalid JSON-RPC 2.0 Error code')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseReturnsParseError(self):
         '''Parse found invalid json'''
         testReqJson = """{INVALID_JSON}"""
@@ -293,6 +316,7 @@ class TestJsonRpc(unittest.TestCase):
         expectedErr = JsonRpcError.ParseError('{INVALID_JSON}')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseInvalidHeader1(self):
         '''Parse found JSON-PRC message without jsonrpc field'''
 
@@ -311,6 +335,7 @@ class TestJsonRpc(unittest.TestCase):
             'Message have no "jsonrpc" field')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseInvalidHeader2(self):
         '''Parse found JSON-PRC message jsonrpc wrong version'''
 
@@ -329,6 +354,7 @@ class TestJsonRpc(unittest.TestCase):
             '"jsonrpc" field value should be 2.0')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseInvalidNotifyReq1(self):
         '''Parse found JSON-PRC 2.0 Notify Request without method field'''
 
@@ -340,6 +366,7 @@ class TestJsonRpc(unittest.TestCase):
         expectedErr = JsonRpcError.InvalidRequest('No "method" field')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseInvalidNotifyReq2(self):
         '''Parse found JSON-PRC 2.0 Notify Request where method is null'''
 
@@ -353,6 +380,7 @@ class TestJsonRpc(unittest.TestCase):
             'Invalid "method" field value')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseInvalidNotifyReq3(self):
         '''Parse found JSON-PRC 2.0 Notify Request where method is empty'''
 
@@ -366,6 +394,7 @@ class TestJsonRpc(unittest.TestCase):
             'Invalid "method" field value')
         testutils.assertEqualObjects(expectedErr, context.exception.rpcError)
 
+    # pylint: disable=R0201
     def testParseInvalidErrorRes1(self):
         '''Parse found JSON-PRC 2.0 Response Error where error object has
         invalid structure.'''
