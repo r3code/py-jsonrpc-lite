@@ -35,7 +35,7 @@ Features
 --------
 
 - Vanilla python, no dependencies
-JSON-RPC 2.0 support
+- JSON-RPC 2.0 support
 
 Testing
 -------
