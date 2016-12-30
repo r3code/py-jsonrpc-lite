@@ -1,4 +1,4 @@
-py-jsonrpc-lite
+﻿py-jsonrpc-lite
 ===============
 
 .. image:: https://travis-ci.org/r3code/py-jsonrpc-lite.svg?branch=master
@@ -24,7 +24,7 @@ This implementation does not have any transport functionality realization, only 
 Install
 -------
 
-#todo
+pip install py-jsonrpc-lite
 
 Tests
 -----

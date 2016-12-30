@@ -1,4 +1,4 @@
-# https://travis-ci.org/r3code/py-jsonrpc-lite
+﻿# https://travis-ci.org/r3code/py-jsonrpc-lite
 language: python
 sudo: false
 python:
