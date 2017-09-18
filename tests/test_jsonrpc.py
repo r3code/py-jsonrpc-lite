@@ -21,7 +21,6 @@ class TestJsonRpc(unittest.TestCase):
     def tearDown(self):
         pass
 
-
     # pylint: disable=R0201
     def testJsonRpcMessageRequestCorrect(self):
         expected = JsonRpcRequest(1, 'login', ['user', 'password'])
@@ -31,7 +30,7 @@ class TestJsonRpc(unittest.TestCase):
     # pylint: disable=R0201
     def testJsonRpcMessageRequestNoParamsCorrect(self):
         expected = JsonRpcRequest(1, 'login')
-        actual = JsonRpcMessage.Request(1, 'login')
+        actual = JsonRpcMessage.Request(1, 'log0in')
         testutils.assertEqualObjects(expected, actual)
 
     # pylint: disable=R0201
